@@ -1,0 +1,65 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.studyplan.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.studyplan.app"
+        minSdk 21           // Android 5.0 — covers 99%+ of active devices
+        targetSdk 35
+        versionCode 2
+        versionName "2.0.0"
+
+        // Keep assets uncompressed for faster WebView loading
+        aaptOptions {
+            noCompress "html", "js", "css", "woff2", "woff", "json"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Sign with debug key for easy sideloading; swap for your keystore in production
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    // Optimise APK size
+    bundle {
+        language { enableSplit = true }
+        density  { enableSplit = true }
+        abi      { enableSplit = true }
+    }
+
+    // Remove unused native ABIs from APK
+    packagingOptions {
+        resources {
+            excludes += [
+                'META-INF/LICENSE',
+                'META-INF/NOTICE',
+                'META-INF/*.kotlin_module'
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.12.1'
+    implementation 'androidx.activity:activity:1.9.0'
+    implementation 'androidx.core:core:1.13.1'
+}
